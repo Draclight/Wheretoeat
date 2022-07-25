@@ -10,7 +10,7 @@ namespace WhereToEat.Services.IServices
     public interface IRoleService : IBaseService
     {
         public RoleViewModel Add(RoleViewModel rvm);
-        public RoleViewModel Get(int Id);
+        public RoleViewModel Get(Guid Id);
         public IList<RoleViewModel> GetAll();
         public RoleViewModel Edit(RoleViewModel rvm);
         public bool Delete(RoleViewModel rvm);

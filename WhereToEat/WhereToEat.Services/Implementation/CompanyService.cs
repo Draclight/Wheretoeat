@@ -77,7 +77,24 @@ namespace WhereToEat.Services.Implementation
 
         public CompanyViewModel Edit(CompanyViewModel cvm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Company c = new Company
+                {
+                    Id = cvm.Id,
+                    CompanyName = cvm.CompanyName,
+                    RegisteredDate = cvm.RegisteredDate,
+                    UpdatedDate = DateTime.Now,
+                };
+                dbContext.Attach(c).State = EntityState.Modified;
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return cvm;
         }
 
         public CompanyViewModel Get(Guid Id)

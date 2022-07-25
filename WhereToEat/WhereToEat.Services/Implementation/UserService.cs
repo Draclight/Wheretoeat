@@ -33,6 +33,11 @@ namespace WhereToEat.Services.Implementation
             throw new NotImplementedException();
         }
 
+        public UserViewModel Get(Guid Id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IList<UserViewModel> GetAll()
         {
             throw new NotImplementedException();

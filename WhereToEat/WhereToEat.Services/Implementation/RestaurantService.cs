@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Sheets.v4;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WhereToEat.Core.Models;
 using WhereToEat.Data.Data;
 using WhereToEat.Services.IServices;
 using WhereToEat.Services.Models;
@@ -12,40 +17,324 @@ namespace WhereToEat.Services.Implementation
     public class RestaurantService : IRestaurantService
     {
         public WhereToEatContext dbContext => new WhereToEatContext();
+        static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
+        static readonly string ApplicationName = "OnMangeOu";
+        static readonly string SpreadsheetId = "1Zop0s06ILvEf6EI7ti7i3HpcdBEEihfA1aE8B0V2j74";
+        static readonly string Sheet = "Restaurants";
+        static SheetsService Service;
 
         public RestaurantViewModel Add(RestaurantViewModel rvm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                DateTime dateTime = DateTime.Now;
+                Restaurant r = new Restaurant
+                {
+                    RestaurantName = rvm.RestaurantName,
+                    Company = dbContext.Companies.Find(rvm.Company.Id),
+                    SuggestedBy = dbContext.Users.Find(rvm.SuggestedBy.Id),
+                    RestaurantAddresse = rvm.RestaurantAddresse,
+                    RestaurantCity = rvm.RestaurantCity,
+                    RestaurantDescription = rvm.RestaurantDescription,
+                    RestaurantMark = "NULL",
+                    RestaurantPhone = rvm.RestaurantPhone,
+                    RestaurantPostaleCode = rvm.RestaurantPostaleCode,
+                    CreatedDate = dateTime,
+                    UpdatedDate = dateTime
+                };
+                dbContext.Attach(r).State = EntityState.Added;
+                dbContext.Restaurants.Add(r);
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return rvm;
         }
 
         public bool Delete(RestaurantViewModel rvm)
         {
-            throw new NotImplementedException();
+            bool ret = false;
+
+            try
+            {
+                ret = Delete(rvm.Id);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
+        }
+
+        public bool Delete(Guid guid)
+        {
+            bool ret = false;
+
+            try
+            {
+                Restaurant r = dbContext.Restaurants.FirstOrDefault(r => r.Id.Equals(guid));
+                if (r != null)
+                {
+                    dbContext.Attach(r).State = EntityState.Deleted;
+                    dbContext.Restaurants.Remove(r);
+                    dbContext.SaveChanges();
+                    ret = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
         }
 
         public RestaurantViewModel Edit(RestaurantViewModel rvm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Restaurant r = new Restaurant
+                {
+                    RestaurantName = rvm.RestaurantName,
+                    Company = dbContext.Companies.Find(rvm.Company.Id),
+                    SuggestedBy = dbContext.Users.Find(rvm.SuggestedBy.Id),
+                    RestaurantAddresse = rvm.RestaurantAddresse,
+                    RestaurantCity = rvm.RestaurantCity,
+                    RestaurantDescription = rvm.RestaurantDescription,
+                    RestaurantMark = rvm.RestaurantMark,
+                    RestaurantPhone = rvm.RestaurantPhone,
+                    RestaurantPostaleCode = rvm.RestaurantPostaleCode,
+                    CreatedDate = rvm.CreatedDate,
+                    UpdatedDate = DateTime.Now
+                };
+                dbContext.Attach(r).State = EntityState.Modified;
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return rvm;
         }
 
-        public RestaurantViewModel Get(int Id)
+        public RestaurantViewModel Get(Guid Id)
         {
-            throw new NotImplementedException();
+            RestaurantViewModel ret = null;
+
+            try
+            {
+                Restaurant r = dbContext.Restaurants.Include(r => r.Company).Include(r => r.SuggestedBy).First(r => r.Id == Id);
+
+                if (r is not null)
+                {
+                    ret = new RestaurantViewModel
+                    {
+                        Id = r.Id,
+                        Company = new CompanyViewModel
+                        {
+                            Id = r.Company.Id,
+                            CompanyName = r.Company.CompanyName,
+                            RegisteredDate = r.Company.RegisteredDate
+                        },
+                        RestaurantName = r.RestaurantName,
+                        SuggestedBy = new UserViewModel
+                        {
+                            Id = Guid.Parse(r.SuggestedBy.Id),
+                            UserName = r.SuggestedBy.UserName,
+                            NormalizedUserName = r.SuggestedBy.NormalizedUserName,
+                            Email = r.SuggestedBy.Email,
+                            NormalizedEmail = r.SuggestedBy.NormalizedEmail,
+                            EmailConfirmed = r.SuggestedBy.EmailConfirmed,
+                            PasswordHash = r.SuggestedBy.PasswordHash,
+                            SecurityStamp = r.SuggestedBy.SecurityStamp,
+                            ConcurrencyStamp = r.SuggestedBy.ConcurrencyStamp,
+                            PhoneNumber = r.SuggestedBy.PhoneNumber,
+                            PhoneNumberConfirmed = r.SuggestedBy.PhoneNumberConfirmed,
+                            TwoFactorEnabled = r.SuggestedBy.TwoFactorEnabled,
+                            LockoutEnd = r.SuggestedBy.LockoutEnd,
+                            LockoutEnabled = r.SuggestedBy.LockoutEnabled,
+                            AccessFailedCount = r.SuggestedBy.AccessFailedCount
+                        },
+                        RestaurantAddresse = r.RestaurantAddresse,
+                        RestaurantCity = r.RestaurantCity,
+                        RestaurantDescription = r.RestaurantDescription,
+                        RestaurantMark = r.RestaurantMark,
+                        RestaurantPhone = r.RestaurantPhone,
+                        RestaurantPostaleCode = r.RestaurantPostaleCode,
+                        CreatedDate = r.CreatedDate,
+                        UpdatedDate = r.UpdatedDate
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
         }
 
         public IList<RestaurantViewModel> GetAll()
         {
-            throw new NotImplementedException();
+            IList<RestaurantViewModel> ret = null;
+
+            try
+            {
+                IQueryable<Restaurant> resQuery = from r in dbContext.Restaurants
+                                                  join u in dbContext.Users on r.SuggestedBy.Id equals u.Id
+                                                  join c in dbContext.Companies on r.Company.Id equals c.Id
+                                                  select r;
+
+                ret = resQuery.Select(r => new RestaurantViewModel
+                {
+                    Id = r.Id,
+                    Company = new CompanyViewModel
+                    {
+                        Id = r.Company.Id,
+                        CompanyName = r.Company.CompanyName,
+                        RegisteredDate = r.Company.RegisteredDate
+                    },
+                    RestaurantName = r.RestaurantName,
+                    SuggestedBy = new UserViewModel
+                    {
+                        Id = Guid.Parse(r.SuggestedBy.Id),
+                        UserName = r.SuggestedBy.UserName,
+                        NormalizedUserName = r.SuggestedBy.NormalizedUserName,
+                        Email = r.SuggestedBy.Email,
+                        NormalizedEmail = r.SuggestedBy.NormalizedEmail,
+                        EmailConfirmed = r.SuggestedBy.EmailConfirmed,
+                        PasswordHash = r.SuggestedBy.PasswordHash,
+                        SecurityStamp = r.SuggestedBy.SecurityStamp,
+                        ConcurrencyStamp = r.SuggestedBy.ConcurrencyStamp,
+                        PhoneNumber = r.SuggestedBy.PhoneNumber,
+                        PhoneNumberConfirmed = r.SuggestedBy.PhoneNumberConfirmed,
+                        TwoFactorEnabled = r.SuggestedBy.TwoFactorEnabled,
+                        LockoutEnd = r.SuggestedBy.LockoutEnd,
+                        LockoutEnabled = r.SuggestedBy.LockoutEnabled,
+                        AccessFailedCount = r.SuggestedBy.AccessFailedCount
+                    },
+                    RestaurantAddresse = r.RestaurantAddresse,
+                    RestaurantCity = r.RestaurantCity,
+                    RestaurantDescription = r.RestaurantDescription,
+                    RestaurantMark = r.RestaurantMark,
+                    RestaurantPhone = r.RestaurantPhone,
+                    RestaurantPostaleCode = r.RestaurantPostaleCode,
+                    CreatedDate = r.CreatedDate,
+                    UpdatedDate = r.UpdatedDate
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
+        }
+
+        public RestaurantViewModel SelectR(Guid companyId)
+        {
+            RestaurantViewModel ret = null;
+            //bool isResultOk = false;
+            //int selectedId = 0;
+            //var rs = from r in dbContext.Restaurants
+            //                                join c in dbContext.Companies on r.Company.Id equals c.Id
+            //                                where c.Id == companyId
+            //                                select r;
+
+            //do
+            //{
+            //    selectedId = new Random().Next(0, rs.Count - 1);
+            //    ret = Get(selectedId);
+            //    isResultOk = true;
+            //} while (isResultOk != true);
+
+            //ret.NumberSelectedTimes++;
+            //UpdateProba(ret);
+
+            return ret;
         }
 
         public RestaurantViewModel SelectR()
         {
-            throw new NotImplementedException();
+            RestaurantViewModel ret = new RestaurantViewModel();
+
+            try
+            {
+                InitializeService();
+
+                //var range = $"{Sheet}!A:F";
+                var range = $"{Sheet}";
+                SpreadsheetsResource.ValuesResource.GetRequest request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
+
+                var response = request.Execute();
+                IList<IList<object>> values = response.Values;
+                if (values != null && values.Count > 0)
+                {
+                    foreach (var row in values)
+                    {
+                        // Print columns A to F, which correspond to indices 0 and 4.
+                        Console.WriteLine("{0} | {1} | {2} | {3} | {4} | {5}", row[0], row[1], row[2], row[3], row[4], row[5]);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No data found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ret.IsError = true;
+                ret.ErrorMessage = ex.Message;
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
         }
 
         public bool UpdateProba(RestaurantViewModel rvm)
         {
-            throw new NotImplementedException();
+            bool ret = false;
+            var rs = from r in dbContext.Restaurants
+                     join c in dbContext.Companies on r.Company.Id equals c.Id
+                     where c.Id == rvm.Company.Id
+                     select r;
+
+            try
+            {
+                Restaurant r = dbContext.Restaurants.Find(rvm.Id);
+                if (r != null)
+                {
+                    ret = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
+        }
+
+        private void InitializeService()
+        {
+            GoogleCredential credential;
+            using (var stream = new FileStream("on-mange-ou-331619-163024a51200.json", FileMode.Open, FileAccess.Read))
+            {
+                credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
+            }
+
+            // Create Google Sheets API service.
+            Service = new SheetsService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
         }
     }
 }
+

@@ -18,6 +18,7 @@ namespace WhereToEat.Services.Models
         public UserViewModel SuggestedBy { get; set; }
         public CompanyViewModel Company { get; set; }
         public IList<ReviewViewModel> Reviews { get; set; }
-
+        public bool IsError { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

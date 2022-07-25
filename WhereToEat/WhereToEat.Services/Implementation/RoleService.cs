@@ -33,6 +33,11 @@ namespace WhereToEat.Services.Implementation
             throw new NotImplementedException();
         }
 
+        public RoleViewModel Get(Guid Id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IList<RoleViewModel> GetAll()
         {
             throw new NotImplementedException();

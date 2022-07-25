@@ -10,7 +10,7 @@ namespace WhereToEat.Services.IServices
     public interface IUserRolesService : IBaseService
     {
         public UserViewModel Add(UserViewModel rvm);
-        public UserViewModel Get(int Id);
+        public UserViewModel Get(Guid Id);
         public IList<UserViewModel> GetAll();
         public UserViewModel Edit(UserViewModel rvm);
         public bool Delete(UserViewModel rvm);

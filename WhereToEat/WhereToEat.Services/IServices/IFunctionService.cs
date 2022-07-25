@@ -10,9 +10,10 @@ namespace WhereToEat.Services.IServices
     public interface IFunctionService : IBaseService
     {
         public FunctionViewModel Add(FunctionViewModel fvm);
-        public FunctionViewModel Get(int Id);
+        public FunctionViewModel Get(Guid Id);
         public IList<FunctionViewModel> GetAll();
         public FunctionViewModel Edit(FunctionViewModel fvm);
         public bool Delete(FunctionViewModel fvm);
+        public bool Delete(Guid guid);
     }
 }
