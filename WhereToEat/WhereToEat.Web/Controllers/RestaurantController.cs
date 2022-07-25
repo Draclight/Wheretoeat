@@ -20,10 +20,9 @@ namespace WhereToEat.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult Get()
         {
             var ret = _restaurantService.SelectR();
-
             return Json(ret);
         }
     }

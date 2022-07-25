@@ -17,19 +17,21 @@ export class Restaurants extends Component {
             <table className='table table-striped' aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Temp. (C)</th>
-                        <th>Temp. (F)</th>
-                        <th>Summary</th>
+                        <th>CreatedDate</th>
+                        <th>RestaurantName</th>
+                        <th>UserName</th>
+                        <th>RestaurantAddresse</th>
+                        <th>RestaurantDescription</th>
                     </tr>
                 </thead>
                 <tbody>
                     {forecasts.map(forecast =>
-                        <tr key={forecast.date}>
-                            <td>{forecast.date}</td>
-                            <td>{forecast.temperatureC}</td>
-                            <td>{forecast.temperatureF}</td>
-                            <td>{forecast.summary}</td>
+                        <tr key={forecast.RestaurantName}>
+                            <td>{forecast.CreatedDate}</td>
+                            <td>{forecast.RestaurantName}</td>
+                            <td>{forecast.SuggestedBy.UserName}</td>
+                            <td>{forecast.RestaurantAddresse}</td>
+                            <td>{forecast.RestaurantDescription}</td>
                         </tr>
                     )}
                 </tbody>
@@ -42,8 +44,7 @@ export class Restaurants extends Component {
 
         return (
             <div>
-                <h1 id="tabelLabel" >Restaurants forecast</h1>
-                <p>Restaurants where you'll eat today.</p>
+                <h1 id="tabelLabel" >In which restaurant to eat today?</h1>
                 {contents}
             </div>
         );

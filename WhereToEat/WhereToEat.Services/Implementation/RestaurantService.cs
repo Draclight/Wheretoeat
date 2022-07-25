@@ -259,9 +259,10 @@ namespace WhereToEat.Services.Implementation
             return ret;
         }
 
-        public RestaurantViewModel SelectR()
+        public IList<RestaurantViewModel> SelectR()
         {
             RestaurantViewModel ret = new RestaurantViewModel();
+            IList<RestaurantViewModel> restaurants = new List<RestaurantViewModel>();
 
             try
             {
@@ -275,25 +276,30 @@ namespace WhereToEat.Services.Implementation
                 IList<IList<object>> values = response.Values;
                 if (values != null && values.Count > 0)
                 {
-                    int index = new Random().Next(0, values.Count-1);
-                    IList<object> tempRestau = values.ElementAt(index);
-                    DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.Now : DateTime.Parse(tempRestau[0].ToString());
-                    string nomRestaurant = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
-                    string parQui = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
-                    string lieu = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
-                    string type = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
-
-                    ret = new RestaurantViewModel
+                    foreach (var tempRestau in values.Skip(1))
                     {
-                        CreatedDate = date,
-                        RestaurantName = nomRestaurant,
-                        SuggestedBy = new UserViewModel
+                        int index = new Random().Next(0, values.Count - 1);
+                        //IList<object> tempRestau = values.ElementAt(index);
+                        DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
+                        string nomRestaurant = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
+                        string parQui = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
+                        string lieu = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
+                        string type = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+
+                        ret = new RestaurantViewModel
                         {
-                            UserName = parQui
-                        },
-                        RestaurantAddresse = lieu,
-                        RestaurantDescription = type
-                    };
+                            CreatedDate = date,
+                            RestaurantName = nomRestaurant,
+                            SuggestedBy = new UserViewModel
+                            {
+                                UserName = parQui
+                            },
+                            RestaurantAddresse = lieu,
+                            RestaurantDescription = type
+                        };
+
+                        restaurants.Add(ret);
+                    }
                 }
                 else
                 {
@@ -307,7 +313,7 @@ namespace WhereToEat.Services.Implementation
                 Console.Error.WriteLine(ex.Message);
             }
 
-            return ret;
+            return restaurants;
         }
 
         public bool UpdateProba(RestaurantViewModel rvm)
@@ -337,7 +343,8 @@ namespace WhereToEat.Services.Implementation
         private void InitializeService()
         {
             GoogleCredential credential;
-            using (var stream = new FileStream(@"C:\DEV\_MIAGE\wheretoeat\WhereToEat\WhereToEat.Services\on-mange-ou-331619-163024a51200.json", FileMode.Open, FileAccess.Read))
+
+            using (var stream = new FileStream(@".\on-mange-ou-331619-163024a51200.json", FileMode.Open, FileAccess.Read))
             {
                 credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
             }

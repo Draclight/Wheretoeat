@@ -25,6 +25,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="on-mange-ou-331619-163024a51200.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="on-mange-ou-331619-163024a51200.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WhereToEat.Services\WhereToEat.Services.csproj" />
   </ItemGroup>
 	<ItemGroup>

@@ -13,6 +13,7 @@ namespace WhereToEat.Tests
             companyService = new CompanyService();
         }
 
+        [Test]
         public void TestAddUser()
         {
             CompanyViewModel viewModel = new CompanyViewModel
@@ -24,6 +25,7 @@ namespace WhereToEat.Tests
             Assert.IsNotNull(viewModel.Id);
         }
 
+        [Test]
         public void TestGetUserIsNotNull()
         {
             var id = Guid.NewGuid();
@@ -31,18 +33,21 @@ namespace WhereToEat.Tests
             Assert.IsNotNull(res);
         }
 
+        [Test]
         public void TestGetAllUserIsNotNull()
         {
             var res = companyService.GetAll();
             Assert.IsNotNull(res);
         }
 
+        [Test]
         public void TestGetAllUserCountIsGreaterThanZero()
         {
             var res = companyService.GetAll();
             Assert.IsTrue(res.Count > 0);
         }
 
+        [Test]
         public void TestDeleteUserByUser()
         {
             CompanyViewModel viewModel = new CompanyViewModel
@@ -55,6 +60,7 @@ namespace WhereToEat.Tests
             Assert.IsTrue(res);
         }
 
+        [Test]
         public void TestDeleteUserByUserId()
         {
             Guid userId = Guid.Parse("efbd4589-6bb4-4693-8106-67f1968327d6");
