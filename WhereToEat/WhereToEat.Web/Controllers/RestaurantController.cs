@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WhereToEat.Services.IServices;
+using WhereToEat.Services.Implementation;
+using WhereToEat.Services.Models;
 
 namespace WhereToEat.Web.Controllers
 {
@@ -11,10 +13,10 @@ namespace WhereToEat.Web.Controllers
         private readonly ILogger<RestaurantController> _logger;
         private IRestaurantService _restaurantService;
 
-        public RestaurantController(ILogger<RestaurantController> logger, IRestaurantService restaurantService)
+        public RestaurantController(ILogger<RestaurantController> logger)
         {
             _logger = logger;
-            _restaurantService = restaurantService;
+            _restaurantService = new RestaurantService();
         }
 
         [HttpGet]

@@ -14,4 +14,10 @@
     <ProjectReference Include="..\WhereToEat.Data\WhereToEat.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="on-mange-ou-331619-163024a51200.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
