@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhereToEat.Services", "Wher
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhereToEat.Tests", "WhereToEat.Tests\WhereToEat.Tests.csproj", "{19953AC9-AA45-42EF-B4D2-A54DDD8538F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhereToEat.Backend", "WhereToEat.Backend\WhereToEat.Backend.csproj", "{1CC85FF3-CAB8-4E06-9EE2-B5C3CB77623A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhereToEat.Backend", "WhereToEat.Backend\WhereToEat.Backend.csproj", "{1CC85FF3-CAB8-4E06-9EE2-B5C3CB77623A}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "WhereToEat.Frontend", "WhereToEat.Frontend\WhereToEat.Frontend.esproj", "{94180831-30D3-49FC-8262-86A508F3FB36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,12 @@ Global
 		{1CC85FF3-CAB8-4E06-9EE2-B5C3CB77623A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CC85FF3-CAB8-4E06-9EE2-B5C3CB77623A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CC85FF3-CAB8-4E06-9EE2-B5C3CB77623A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94180831-30D3-49FC-8262-86A508F3FB36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94180831-30D3-49FC-8262-86A508F3FB36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94180831-30D3-49FC-8262-86A508F3FB36}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{94180831-30D3-49FC-8262-86A508F3FB36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94180831-30D3-49FC-8262-86A508F3FB36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94180831-30D3-49FC-8262-86A508F3FB36}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
