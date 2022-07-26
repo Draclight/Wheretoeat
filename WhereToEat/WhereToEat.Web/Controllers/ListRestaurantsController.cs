@@ -7,20 +7,20 @@ namespace WhereToEat.Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class RestaurantController : ControllerBase
+public class ListRestaurantsController : ControllerBase
 {
-    private readonly ILogger<RestaurantController> _logger;
+    private readonly ILogger<ListRestaurantsController> _logger;
     private readonly IRestaurantService _restaurantService;
 
-    public RestaurantController(ILogger<RestaurantController> logger, IRestaurantService restaurantService)
+    public ListRestaurantsController(ILogger<ListRestaurantsController> logger, IRestaurantService restaurantService)
     {
         _logger = logger;
         _restaurantService = restaurantService;
     }
 
     [HttpGet]
-    public RestaurantViewModel Get()
+    public IEnumerable<RestaurantViewModel> Get()
     {
-        return _restaurantService.SelectR();
+        return _restaurantService.GetAll();
     }
 }

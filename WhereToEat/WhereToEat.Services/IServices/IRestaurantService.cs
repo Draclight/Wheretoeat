@@ -16,7 +16,7 @@ namespace WhereToEat.Services.IServices
         public bool Delete(RestaurantViewModel rvm);
         public bool Delete(Guid guid);
         public bool UpdateProba(RestaurantViewModel rvm);
-        public IList<RestaurantViewModel> SelectR();
+        public RestaurantViewModel SelectR();
         public RestaurantViewModel SelectR(Guid companyId);
     }
 }

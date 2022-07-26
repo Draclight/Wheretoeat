@@ -1,9 +1,16 @@
+using WhereToEat.Services.IServices;
+using WhereToEat.Services.Implementation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddMvc(); //Adds basic MVC functionality
+builder.Services.AddControllers(); //Adds support for MVC controllers (views and routing would need to be added separately)
+builder.Services.AddLogging(); //Adds default logging support
+builder.Services.AddSignalR(); //Adds support for SignalR
+builder.Services.AddTransient<IRestaurantService, RestaurantService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

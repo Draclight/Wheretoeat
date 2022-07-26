@@ -1,7 +1,8 @@
 import { Counter } from "./components/Counter";
 import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
-import { Restaurants } from "./components/Restaurants";
+import { ListRestaurants } from "./components/ListRestaurants";
+import { Restaurant } from "./components/Restaurant";
 
 const AppRoutes = [
   {
@@ -17,8 +18,12 @@ const AppRoutes = [
     element: <FetchData />
     },
     {
+        path: '/list-restaurants',
+        element: <ListRestaurants />
+    },
+    {
         path: '/restaurant',
-        element: <Restaurants />
+        element: <Restaurant />
     }
 ];
 

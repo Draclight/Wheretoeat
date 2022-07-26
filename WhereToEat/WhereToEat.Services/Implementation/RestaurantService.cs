@@ -179,61 +179,112 @@ namespace WhereToEat.Services.Implementation
             return ret;
         }
 
+        //public IList<RestaurantViewModel> GetAll()
+        //{
+        //    IList<RestaurantViewModel> ret = null;
+
+        //    try
+        //    {
+        //        IQueryable<Restaurant> resQuery = from r in dbContext.Restaurants
+        //                                          join u in dbContext.Users on r.SuggestedBy.Id equals u.Id
+        //                                          join c in dbContext.Companies on r.Company.Id equals c.Id
+        //                                          select r;
+
+        //        ret = resQuery.Select(r => new RestaurantViewModel
+        //        {
+        //            Id = r.Id,
+        //            Company = new CompanyViewModel
+        //            {
+        //                Id = r.Company.Id,
+        //                CompanyName = r.Company.CompanyName,
+        //                RegisteredDate = r.Company.RegisteredDate
+        //            },
+        //            RestaurantName = r.RestaurantName,
+        //            SuggestedBy = new UserViewModel
+        //            {
+        //                Id = Guid.Parse(r.SuggestedBy.Id),
+        //                UserName = r.SuggestedBy.UserName,
+        //                NormalizedUserName = r.SuggestedBy.NormalizedUserName,
+        //                Email = r.SuggestedBy.Email,
+        //                NormalizedEmail = r.SuggestedBy.NormalizedEmail,
+        //                EmailConfirmed = r.SuggestedBy.EmailConfirmed,
+        //                PasswordHash = r.SuggestedBy.PasswordHash,
+        //                SecurityStamp = r.SuggestedBy.SecurityStamp,
+        //                ConcurrencyStamp = r.SuggestedBy.ConcurrencyStamp,
+        //                PhoneNumber = r.SuggestedBy.PhoneNumber,
+        //                PhoneNumberConfirmed = r.SuggestedBy.PhoneNumberConfirmed,
+        //                TwoFactorEnabled = r.SuggestedBy.TwoFactorEnabled,
+        //                LockoutEnd = r.SuggestedBy.LockoutEnd,
+        //                LockoutEnabled = r.SuggestedBy.LockoutEnabled,
+        //                AccessFailedCount = r.SuggestedBy.AccessFailedCount
+        //            },
+        //            RestaurantAddresse = r.RestaurantAddresse,
+        //            RestaurantCity = r.RestaurantCity,
+        //            RestaurantDescription = r.RestaurantDescription,
+        //            RestaurantMark = r.RestaurantMark,
+        //            RestaurantPhone = r.RestaurantPhone,
+        //            RestaurantPostaleCode = r.RestaurantPostaleCode,
+        //            CreatedDate = r.CreatedDate,
+        //            UpdatedDate = r.UpdatedDate
+        //        }).ToList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.Error.WriteLine(ex.Message);
+        //    }
+
+        //    return ret;
+        //}
+
         public IList<RestaurantViewModel> GetAll()
         {
-            IList<RestaurantViewModel> ret = null;
+            IList<RestaurantViewModel> restaurants = new List<RestaurantViewModel>();
 
             try
             {
-                IQueryable<Restaurant> resQuery = from r in dbContext.Restaurants
-                                                  join u in dbContext.Users on r.SuggestedBy.Id equals u.Id
-                                                  join c in dbContext.Companies on r.Company.Id equals c.Id
-                                                  select r;
+                InitializeService();
 
-                ret = resQuery.Select(r => new RestaurantViewModel
+                var range = $"{Sheet}";
+                SpreadsheetsResource.ValuesResource.GetRequest request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
+
+                var response = request.Execute();
+                IList<IList<object>> values = response.Values;
+                if (values != null && values.Count > 0)
                 {
-                    Id = r.Id,
-                    Company = new CompanyViewModel
+                    foreach (var tempRestau in values.Skip(1))
                     {
-                        Id = r.Company.Id,
-                        CompanyName = r.Company.CompanyName,
-                        RegisteredDate = r.Company.RegisteredDate
-                    },
-                    RestaurantName = r.RestaurantName,
-                    SuggestedBy = new UserViewModel
-                    {
-                        Id = Guid.Parse(r.SuggestedBy.Id),
-                        UserName = r.SuggestedBy.UserName,
-                        NormalizedUserName = r.SuggestedBy.NormalizedUserName,
-                        Email = r.SuggestedBy.Email,
-                        NormalizedEmail = r.SuggestedBy.NormalizedEmail,
-                        EmailConfirmed = r.SuggestedBy.EmailConfirmed,
-                        PasswordHash = r.SuggestedBy.PasswordHash,
-                        SecurityStamp = r.SuggestedBy.SecurityStamp,
-                        ConcurrencyStamp = r.SuggestedBy.ConcurrencyStamp,
-                        PhoneNumber = r.SuggestedBy.PhoneNumber,
-                        PhoneNumberConfirmed = r.SuggestedBy.PhoneNumberConfirmed,
-                        TwoFactorEnabled = r.SuggestedBy.TwoFactorEnabled,
-                        LockoutEnd = r.SuggestedBy.LockoutEnd,
-                        LockoutEnabled = r.SuggestedBy.LockoutEnabled,
-                        AccessFailedCount = r.SuggestedBy.AccessFailedCount
-                    },
-                    RestaurantAddresse = r.RestaurantAddresse,
-                    RestaurantCity = r.RestaurantCity,
-                    RestaurantDescription = r.RestaurantDescription,
-                    RestaurantMark = r.RestaurantMark,
-                    RestaurantPhone = r.RestaurantPhone,
-                    RestaurantPostaleCode = r.RestaurantPostaleCode,
-                    CreatedDate = r.CreatedDate,
-                    UpdatedDate = r.UpdatedDate
-                }).ToList();
+                        DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
+                        string nomRestaurant = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
+                        string parQui = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
+                        string lieu = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
+                        string type = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+
+                        RestaurantViewModel rvm = new RestaurantViewModel
+                        {
+                            CreatedDateString = date.ToShortDateString(),
+                            RestaurantName = nomRestaurant,
+                            SuggestedBy = new UserViewModel
+                            {
+                                UserName = parQui
+                            },
+                            RestaurantAddresse = lieu,
+                            RestaurantDescription = type
+                        };
+
+                        restaurants.Add(rvm);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No data found.");
+                }
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
             }
 
-            return ret;
+            return restaurants;
         }
 
         public RestaurantViewModel SelectR(Guid companyId)
@@ -259,16 +310,13 @@ namespace WhereToEat.Services.Implementation
             return ret;
         }
 
-        public IList<RestaurantViewModel> SelectR()
+        public RestaurantViewModel SelectR()
         {
             RestaurantViewModel ret = new RestaurantViewModel();
-            IList<RestaurantViewModel> restaurants = new List<RestaurantViewModel>();
 
             try
             {
                 InitializeService();
-
-                //var range = $"{Sheet}!A:F";
                 var range = $"{Sheet}";
                 SpreadsheetsResource.ValuesResource.GetRequest request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
 
@@ -276,30 +324,25 @@ namespace WhereToEat.Services.Implementation
                 IList<IList<object>> values = response.Values;
                 if (values != null && values.Count > 0)
                 {
-                    foreach (var tempRestau in values.Skip(1))
+                    int index = new Random().Next(0, values.Count - 1);
+                    IList<object> tempRestau = values.ElementAt(index);
+                    DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
+                    string nomRestaurant = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
+                    string parQui = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
+                    string lieu = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
+                    string type = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+
+                    ret = new RestaurantViewModel
                     {
-                        int index = new Random().Next(0, values.Count - 1);
-                        //IList<object> tempRestau = values.ElementAt(index);
-                        DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
-                        string nomRestaurant = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
-                        string parQui = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
-                        string lieu = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
-                        string type = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
-
-                        ret = new RestaurantViewModel
+                        CreatedDateString = date.ToShortDateString(),
+                        RestaurantName = nomRestaurant,
+                        SuggestedBy = new UserViewModel
                         {
-                            CreatedDate = date,
-                            RestaurantName = nomRestaurant,
-                            SuggestedBy = new UserViewModel
-                            {
-                                UserName = parQui
-                            },
-                            RestaurantAddresse = lieu,
-                            RestaurantDescription = type
-                        };
-
-                        restaurants.Add(ret);
-                    }
+                            UserName = parQui
+                        },
+                        RestaurantAddresse = lieu,
+                        RestaurantDescription = type
+                    };
                 }
                 else
                 {
@@ -313,7 +356,7 @@ namespace WhereToEat.Services.Implementation
                 Console.Error.WriteLine(ex.Message);
             }
 
-            return restaurants;
+            return ret;
         }
 
         public bool UpdateProba(RestaurantViewModel rvm)

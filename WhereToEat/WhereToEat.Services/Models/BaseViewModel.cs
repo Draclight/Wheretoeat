@@ -10,6 +10,8 @@ namespace WhereToEat.Services.Models
     {
         public Guid Id { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string CreatedDateString { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public string UpdatedDateString { get; set; }
     }
 }
