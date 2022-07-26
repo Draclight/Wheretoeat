@@ -18,5 +18,6 @@ namespace WhereToEat.Services.IServices
         public bool UpdateProba(RestaurantViewModel rvm);
         public RestaurantViewModel SelectR();
         public RestaurantViewModel SelectR(Guid companyId);
+        public RestaurantViewModel SelectR2();
     }
 }

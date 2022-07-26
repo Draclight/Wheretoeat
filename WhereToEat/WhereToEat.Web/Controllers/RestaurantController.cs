@@ -23,4 +23,11 @@ public class RestaurantController : ControllerBase
     {
         return _restaurantService.SelectR();
     }
+
+    [HttpPost]
+    [Route("New")]
+    public string New(string _s)
+    {
+        return $"hello {_s}"; 
+    }
 }

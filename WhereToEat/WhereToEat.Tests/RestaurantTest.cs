@@ -6,45 +6,101 @@ namespace WhereToEat.Tests
 {
     public class RestaurantTest
     {
-        private IRestaurantService _restaurantService;
         [SetUp]
         public void Setup()
         {
-            _restaurantService = new RestaurantService();
+
         }
 
         [Test]
-        public void TestSelectRIsNull()
+        public void SelectR_IsNotNull()
         {
+            // Arrange
+            IRestaurantService _restaurantService = new RestaurantService();
+            
+            // Act
             var viewModel = _restaurantService.SelectR();
-            Assert.IsNull(viewModel);
-        }
 
-        [Test]
-        public void TestSelectRIsNotNull()
-        {
-            var viewModel = _restaurantService.SelectR();
+            // Assert
             Assert.IsNotNull(viewModel);
         }
 
         [Test]
-        public void TestSelectRIsEmpty()
+        public void SelectR_CreatedDateIsGreaterThanMinimum()
         {
+            // Arrange
+            IRestaurantService _restaurantService = new RestaurantService();
+
+            // Act
             var viewModel = _restaurantService.SelectR();
-            if (viewModel != null)
-            {
-                Assert.IsEmpty(viewModel);
-            }
+
+            // Assert
+            Assert.Greater(viewModel.CreatedDate, DateTime.MinValue);
         }
 
         [Test]
-        public void TestSelectRIsNotEmpty()
+        public void SelectR_CreatedDateStringIsNotNull()
         {
+            // Arrange
+            IRestaurantService _restaurantService = new RestaurantService();
+
+            // Act
             var viewModel = _restaurantService.SelectR();
-            if (viewModel != null)
-            {
-                Assert.IsNotEmpty(viewModel);
-            }
+
+            // Assert
+            Assert.IsNotNull(viewModel.CreatedDateString);
+        }
+
+        [Test]
+        public void SelectR_RestaurantNameIsNotNull()
+        {
+            // Arrange
+            IRestaurantService _restaurantService = new RestaurantService();
+
+            // Act
+            var viewModel = _restaurantService.SelectR();
+
+            // Assert
+            Assert.IsNotNull(viewModel.RestaurantName);
+        }
+
+        [Test]
+        public void SelectR_SuggestedByIsNotNull()
+        {
+            // Arrange
+            IRestaurantService _restaurantService = new RestaurantService();
+
+            // Act
+            var viewModel = _restaurantService.SelectR();
+
+            // Assert
+            Assert.IsNotNull(viewModel.SuggestedBy);
+        }
+
+        [Test]
+        public void SelectR_RestaurantDescriptionIsNotNull()
+        {
+            // Arrange
+            IRestaurantService _restaurantService = new RestaurantService();
+
+            // Act
+            var viewModel = _restaurantService.SelectR();
+
+            // Assert
+            Assert.IsNotNull(viewModel.RestaurantDescription);
+        }
+
+        [Test]
+        public void SelectR2_IsNotNull()
+        {
+            // Arrange
+            IRestaurantService _restaurantService = new RestaurantService();
+
+            // Act
+            var viewModel = _restaurantService.SelectR2();
+
+            // Assert
+            Assert.IsNotNull(viewModel);
         }
     }
 }

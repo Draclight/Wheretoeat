@@ -51,7 +51,16 @@ export class Restaurant extends Component {
     async populateRestaurantData() {
         const response = await fetch('restaurant');
         const data = await response.json();
-        console.log(data);
         this.setState({ forecasts: data, loading: false });
+
+        const response2 = fetch('restaurant/New', {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: "test"
+        }).then(r => r.json()).then(res => {
+            if (res) {
+                this.setState({ message: 'New Employee is Created Successfully' });
+            }
+        });
     }
 }

@@ -254,21 +254,21 @@ namespace WhereToEat.Services.Implementation
                     foreach (var tempRestau in values.Skip(1))
                     {
                         DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
-                        string nomRestaurant = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
-                        string parQui = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
-                        string lieu = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
-                        string type = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+                        string restaurantName = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
+                        string suggestedBy = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
+                        string restaurantAddresse = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
+                        string restaurantDescription = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
 
                         RestaurantViewModel rvm = new RestaurantViewModel
                         {
                             CreatedDateString = date.ToShortDateString(),
-                            RestaurantName = nomRestaurant,
+                            RestaurantName = restaurantName,
                             SuggestedBy = new UserViewModel
                             {
-                                UserName = parQui
+                                UserName = suggestedBy
                             },
-                            RestaurantAddresse = lieu,
-                            RestaurantDescription = type
+                            RestaurantAddresse = restaurantAddresse,
+                            RestaurantDescription = restaurantDescription
                         };
 
                         restaurants.Add(rvm);
@@ -327,27 +327,47 @@ namespace WhereToEat.Services.Implementation
                     int index = new Random().Next(0, values.Count - 1);
                     IList<object> tempRestau = values.ElementAt(index);
                     DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
-                    string nomRestaurant = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
-                    string parQui = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
-                    string lieu = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
-                    string type = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+                    string RestaurantName = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
+                    string suggestedBy = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
+                    string restaurantAddresse = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
+                    string restaurantDescription = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
 
                     ret = new RestaurantViewModel
                     {
+                        CreatedDate = date,
                         CreatedDateString = date.ToShortDateString(),
-                        RestaurantName = nomRestaurant,
+                        RestaurantName = RestaurantName,
                         SuggestedBy = new UserViewModel
                         {
-                            UserName = parQui
+                            UserName = suggestedBy
                         },
-                        RestaurantAddresse = lieu,
-                        RestaurantDescription = type
+                        RestaurantAddresse = restaurantAddresse,
+                        RestaurantDescription = restaurantDescription
                     };
                 }
                 else
                 {
                     Console.WriteLine("No data found.");
                 }
+            }
+            catch (Exception ex)
+            {
+                ret.IsError = true;
+                ret.ErrorMessage = ex.Message;
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
+        }
+
+        public RestaurantViewModel SelectR2()
+        {
+            RestaurantViewModel ret = new RestaurantViewModel();
+
+            try
+            {
+                var restaurants = GetAll();
+
             }
             catch (Exception ex)
             {
