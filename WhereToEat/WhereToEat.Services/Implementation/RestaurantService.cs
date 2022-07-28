@@ -173,7 +173,7 @@ namespace WhereToEat.Services.Implementation
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                throw new Exception("No data found.");
             }
 
             return ret;
@@ -236,9 +236,9 @@ namespace WhereToEat.Services.Implementation
         //    return ret;
         //}
 
-        public IList<RestaurantViewModel> GetAll()
+        public RestaurantListViewModel GetAll()
         {
-            IList<RestaurantViewModel> restaurants = new List<RestaurantViewModel>();
+            RestaurantListViewModel ret = new RestaurantListViewModel();
 
             try
             {
@@ -271,20 +271,20 @@ namespace WhereToEat.Services.Implementation
                             RestaurantDescription = restaurantDescription
                         };
 
-                        restaurants.Add(rvm);
+                        ret.Add(rvm);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("No data found.");
+                    throw new Exception("No data found.");
                 }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                throw ex;
             }
 
-            return restaurants;
+            return ret;
         }
 
         public RestaurantViewModel SelectR(Guid companyId)
@@ -347,14 +347,12 @@ namespace WhereToEat.Services.Implementation
                 }
                 else
                 {
-                    Console.WriteLine("No data found.");
+                    throw new Exception("No data found.");
                 }
             }
             catch (Exception ex)
             {
-                ret.IsError = true;
-                ret.ErrorMessage = ex.Message;
-                Console.Error.WriteLine(ex.Message);
+                throw ex;
             }
 
             return ret;
@@ -366,14 +364,12 @@ namespace WhereToEat.Services.Implementation
 
             try
             {
-                var restaurants = GetAll();
+                RestaurantListViewModel restaurants = GetAll();
 
             }
             catch (Exception ex)
             {
-                ret.IsError = true;
-                ret.ErrorMessage = ex.Message;
-                Console.Error.WriteLine(ex.Message);
+                throw ex;
             }
 
             return ret;
@@ -390,14 +386,16 @@ namespace WhereToEat.Services.Implementation
             try
             {
                 Restaurant r = dbContext.Restaurants.Find(rvm.Id);
-                if (r != null)
+                if (r == null)
+                    throw new Exception("Error update proba on restaurant");
+                else
                 {
                     ret = true;
                 }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                throw ex;
             }
 
             return ret;

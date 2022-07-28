@@ -10,6 +10,7 @@ namespace WhereToEat.Backend.Controllers
     {
         private readonly ILogger<RestaurantController> _logger;
         private readonly IRestaurantService _restaurantService;
+
         public RestaurantController(ILogger<RestaurantController> logger, IRestaurantService restaurantService)
         {
             _logger = logger;
@@ -17,15 +18,57 @@ namespace WhereToEat.Backend.Controllers
         }
 
         [HttpGet("GetAllRestaurants")]
-        public IList<RestaurantViewModel> GetAllRestaurants()
+        public RestaurantListViewModel GetAllRestaurants()
         {
-            return _restaurantService.GetAll();
+            RestaurantListViewModel ret = new RestaurantListViewModel();
+         
+            try
+            {
+                ret = _restaurantService.GetAll();
+            }
+            catch (Exception ex)
+            {
+                ret.Error.IsError = true;
+                ret.Error.ErrorMessage = ex.Message;
+                _logger.LogError(ex.Message);
+            }
+
+            return ret;
         }
 
         [HttpGet("SelectRestaurant")]
         public RestaurantViewModel SelectRestaurant()
         {
-            return _restaurantService.SelectR();
+            RestaurantViewModel ret = new RestaurantViewModel();
+            try
+            {
+                ret = _restaurantService.SelectR();
+            }
+            catch (Exception ex)
+            {
+                ret.Error.IsError = true;
+                ret.Error.ErrorMessage = ex.Message;
+                _logger.LogError(ex.Message);
+            }
+
+            return ret;
+        }
+
+        [HttpPut("AddRestaurant")]
+        public RestaurantViewModel AddRestaurant(RestaurantViewModel restaurant)
+        {
+            try
+            {
+                restaurant = _restaurantService.Add(restaurant);
+            }
+            catch (Exception ex)
+            {
+                restaurant.Error.IsError = true;
+                restaurant.Error.ErrorMessage = ex.Message;
+                _logger.LogError(ex.Message);
+            }
+
+            return restaurant;
         }
     }
 }

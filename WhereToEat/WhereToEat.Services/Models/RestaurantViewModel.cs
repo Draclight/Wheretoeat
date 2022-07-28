@@ -8,6 +8,11 @@ namespace WhereToEat.Services.Models
 {
     public class RestaurantViewModel : BaseViewModel
     {
+        public RestaurantViewModel()
+        {
+            Error = new ErrorViewModel();
+        }
+
         public string RestaurantName { get; set; }
         public string RestaurantAddresse { get; set; }
         public string RestaurantDescription { get; set; }
@@ -18,7 +23,7 @@ namespace WhereToEat.Services.Models
         public UserViewModel SuggestedBy { get; set; }
         public CompanyViewModel Company { get; set; }
         public IList<ReviewViewModel> Reviews { get; set; }
-        public bool IsError { get; set; }
-        public string ErrorMessage { get; set; }
+
+        public ErrorViewModel Error { get; set; }
     }
 }

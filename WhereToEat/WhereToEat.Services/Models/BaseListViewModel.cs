@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace WhereToEat.Services.Models
 {
-    public class BaseViewModel
+    public class BaseListViewModel<T> : List<T>
     {
-        public Guid Id { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string CreatedDateString { get; set; }
-        public DateTime UpdatedDate { get; set; }
-        public string UpdatedDateString { get; set; }
-
         public class ErrorViewModel
         {
             public bool IsError { get; set; }

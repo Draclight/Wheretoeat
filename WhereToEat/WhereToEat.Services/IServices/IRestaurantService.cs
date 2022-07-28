@@ -11,7 +11,7 @@ namespace WhereToEat.Services.IServices
     {
         public RestaurantViewModel Add(RestaurantViewModel rvm);
         public RestaurantViewModel Get(Guid Id);
-        public IList<RestaurantViewModel> GetAll();
+        public RestaurantListViewModel GetAll();
         public RestaurantViewModel Edit(RestaurantViewModel rvm);
         public bool Delete(RestaurantViewModel rvm);
         public bool Delete(Guid guid);
