@@ -48,7 +48,7 @@ namespace WhereToEat.Services.Implementation
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
             }
 
             return rvm;
@@ -64,7 +64,7 @@ namespace WhereToEat.Services.Implementation
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
             }
 
             return ret;
@@ -87,7 +87,7 @@ namespace WhereToEat.Services.Implementation
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
             }
 
             return ret;
@@ -116,7 +116,7 @@ namespace WhereToEat.Services.Implementation
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
             }
 
             return rvm;
@@ -173,7 +173,7 @@ namespace WhereToEat.Services.Implementation
             }
             catch (Exception ex)
             {
-                throw new Exception("No data found.");
+                throw new Exception(ex.Message);
             }
 
             return ret;
@@ -258,6 +258,7 @@ namespace WhereToEat.Services.Implementation
                         string suggestedBy = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
                         string restaurantAddresse = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
                         string restaurantDescription = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+                        string restaurantMark = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[12].ToString();
 
                         RestaurantViewModel rvm = new RestaurantViewModel
                         {
@@ -268,7 +269,8 @@ namespace WhereToEat.Services.Implementation
                                 UserName = suggestedBy
                             },
                             RestaurantAddresse = restaurantAddresse,
-                            RestaurantDescription = restaurantDescription
+                            RestaurantDescription = restaurantDescription,
+                            RestaurantMark = restaurantMark
                         };
 
                         ret.Add(rvm);
@@ -331,6 +333,7 @@ namespace WhereToEat.Services.Implementation
                     string suggestedBy = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
                     string restaurantAddresse = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
                     string restaurantDescription = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+                    string restaurantMark = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[12].ToString();
 
                     ret = new RestaurantViewModel
                     {
@@ -342,7 +345,8 @@ namespace WhereToEat.Services.Implementation
                             UserName = suggestedBy
                         },
                         RestaurantAddresse = restaurantAddresse,
-                        RestaurantDescription = restaurantDescription
+                        RestaurantDescription = restaurantDescription,
+                        RestaurantMark = restaurantMark
                     };
                 }
                 else
@@ -365,6 +369,8 @@ namespace WhereToEat.Services.Implementation
             try
             {
                 RestaurantListViewModel restaurants = GetAll();
+                int numberOfRestaurants = restaurants.Count;
+                var rdn = new Random(Guid.NewGuid().GetHashCode());
 
             }
             catch (Exception ex)

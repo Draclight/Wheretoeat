@@ -21,7 +21,7 @@ namespace WhereToEat.Backend.Controllers
         public RestaurantListViewModel GetAllRestaurants()
         {
             RestaurantListViewModel ret = new RestaurantListViewModel();
-         
+
             try
             {
                 ret = _restaurantService.GetAll();
@@ -70,5 +70,93 @@ namespace WhereToEat.Backend.Controllers
 
             return restaurant;
         }
+
+        [HttpPut("UpdateProba")]
+        public bool UpdateProba(RestaurantViewModel rvm)
+        {
+            bool ret = false;
+
+            try
+            {
+                ret = _restaurantService.UpdateProba(rvm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return ret;
+        }
+
+        [HttpDelete("DeleteRestaurant")]
+        public bool Delete(RestaurantViewModel rvm)
+        {
+            bool ret = false;
+
+            try
+            {
+                ret = _restaurantService.Delete(rvm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return ret;
+        }
+
+        [HttpDelete("DeleteRestaurantById")]
+        public bool Delete(Guid guid)
+        {
+            bool ret = false;
+
+            try
+            {
+                ret = _restaurantService.Delete(guid);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
+            return ret;
+        }
+
+        [HttpPut("EditRestaurant")]
+        public RestaurantViewModel Edit(RestaurantViewModel rvm)
+        {
+            try
+            {
+                rvm = _restaurantService.Edit(rvm);
+            }
+            catch (Exception ex)
+            {
+                rvm.Error.IsError = true;
+                rvm.Error.ErrorMessage = ex.Message;
+                _logger.LogError(ex.Message);
+            }
+
+            return rvm;
+        }
+
+        [HttpGet("GetRestaurant")]
+        public RestaurantViewModel Get(Guid guid)
+        {
+            RestaurantViewModel ret = new RestaurantViewModel();
+
+            try
+            {
+                ret = _restaurantService.Get(guid);
+            }
+            catch (Exception ex)
+            {
+                ret.Error.IsError = true;
+                ret.Error.ErrorMessage = ex.Message;
+                _logger.LogError(ex.Message);
+            }
+
+            return ret;
+        }
+
     }
 }
