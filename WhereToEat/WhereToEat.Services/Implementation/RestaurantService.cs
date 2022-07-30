@@ -411,17 +411,25 @@ namespace WhereToEat.Services.Implementation
         {
             GoogleCredential credential;
 
-            using (var stream = new FileStream(@".\on-mange-ou-331619-163024a51200.json", FileMode.Open, FileAccess.Read))
+            try
             {
-                credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
-            }
+                using (var stream = new FileStream(@"./on-mange-ou-331619-163024a51200.json", FileMode.Open, FileAccess.Read))
+                {
+                    credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
+                }
 
-            // Create Google Sheets API service.
-            Service = new SheetsService(new BaseClientService.Initializer()
+                // Create Google Sheets API service.
+                Service = new SheetsService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = ApplicationName,
+                });
+            }
+            catch (Exception ex)
             {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
+                Console.WriteLine($"MyError : {ex.Message} - Date {DateTime.Now}");
+                throw ex;
+            }
         }
     }
 }
