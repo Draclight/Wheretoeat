@@ -1,4 +1,4 @@
-namespace WhereToEat.Web
+namespace WhereToEat
 {
     public class WeatherForecast
     {

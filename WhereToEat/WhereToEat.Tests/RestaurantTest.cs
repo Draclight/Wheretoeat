@@ -19,7 +19,7 @@ namespace WhereToEat.Tests
             IRestaurantService _restaurantService = new RestaurantService();
             
             // Act
-            var viewModel = _restaurantService.SelectR();
+            var viewModel = _restaurantService.SelectRestaurant();
 
             // Assert
             Assert.IsNotNull(viewModel);
@@ -32,7 +32,7 @@ namespace WhereToEat.Tests
             IRestaurantService _restaurantService = new RestaurantService();
 
             // Act
-            var viewModel = _restaurantService.SelectR();
+            var viewModel = _restaurantService.SelectRestaurant();
 
             // Assert
             Assert.Greater(viewModel.CreatedDate, DateTime.MinValue);
@@ -45,7 +45,7 @@ namespace WhereToEat.Tests
             IRestaurantService _restaurantService = new RestaurantService();
 
             // Act
-            var viewModel = _restaurantService.SelectR();
+            var viewModel = _restaurantService.SelectRestaurant();
 
             // Assert
             Assert.IsNotNull(viewModel.CreatedDateString);
@@ -58,7 +58,7 @@ namespace WhereToEat.Tests
             IRestaurantService _restaurantService = new RestaurantService();
 
             // Act
-            var viewModel = _restaurantService.SelectR();
+            var viewModel = _restaurantService.SelectRestaurant();
 
             // Assert
             Assert.IsNotNull(viewModel.RestaurantName);
@@ -71,7 +71,7 @@ namespace WhereToEat.Tests
             IRestaurantService _restaurantService = new RestaurantService();
 
             // Act
-            var viewModel = _restaurantService.SelectR();
+            var viewModel = _restaurantService.SelectRestaurant();
 
             // Assert
             Assert.IsNotNull(viewModel.SuggestedBy);
@@ -84,23 +84,10 @@ namespace WhereToEat.Tests
             IRestaurantService _restaurantService = new RestaurantService();
 
             // Act
-            var viewModel = _restaurantService.SelectR();
+            var viewModel = _restaurantService.SelectRestaurant();
 
             // Assert
             Assert.IsNotNull(viewModel.RestaurantDescription);
-        }
-
-        [Test]
-        public void SelectR2_IsNotNull()
-        {
-            // Arrange
-            IRestaurantService _restaurantService = new RestaurantService();
-
-            // Act
-            var viewModel = _restaurantService.SelectR2();
-
-            // Assert
-            Assert.IsNotNull(viewModel);
         }
     }
 }

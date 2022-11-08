@@ -1,10 +1,20 @@
-using Microsoft.AspNetCore.SpaServices.Webpack;
+using WhereToEat.Services.Implementation;
+using WhereToEat.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRolesService, UserRoleService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 var app = builder.Build();
 
@@ -19,10 +29,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-{
-    HotModuleReplacement = true
-});
 
 app.MapControllerRoute(
     name: "default",

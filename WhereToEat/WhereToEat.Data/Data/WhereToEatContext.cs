@@ -26,7 +26,7 @@ namespace WhereToEat.Data.Data
                 #elif (TEST)
                     connectionString = config.GetSection("connetionStringRec").Value;
                 #elif (RELEASE)
-                    config = ConfigHelper.Load(Env.prod);
+                    connectionString = config.GetSection("connetionStringProd").Value;
                 #endif
             }
             catch (Exception ex)

@@ -17,11 +17,6 @@ namespace WhereToEat.Services.Implementation
     public class RestaurantService : IRestaurantService
     {
         public WhereToEatContext dbContext => new WhereToEatContext();
-        static readonly string[] Scopes = { SheetsService.Scope.Spreadsheets };
-        static readonly string ApplicationName = "OnMangeOu";
-        static readonly string SpreadsheetId = "1Zop0s06ILvEf6EI7ti7i3HpcdBEEihfA1aE8B0V2j74";
-        static readonly string Sheet = "Restaurants";
-        static SheetsService Service;
 
         public RestaurantViewModel Add(RestaurantViewModel rvm)
         {
@@ -179,188 +174,141 @@ namespace WhereToEat.Services.Implementation
             return ret;
         }
 
-        //public IList<RestaurantViewModel> GetAll()
+        public IList<RestaurantViewModel> GetAll()
+        {
+            IList<RestaurantViewModel> ret = null;
+
+            try
+            {
+                IQueryable<Restaurant> resQuery = from r in dbContext.Restaurants
+                                                  join u in dbContext.Users on r.SuggestedBy.Id equals u.Id
+                                                  join c in dbContext.Companies on r.Company.Id equals c.Id
+                                                  select r;
+
+                ret = resQuery.Select(r => new RestaurantViewModel
+                {
+                    Id = r.Id,
+                    Company = new CompanyViewModel
+                    {
+                        Id = r.Company.Id,
+                        CompanyName = r.Company.CompanyName,
+                        RegisteredDate = r.Company.RegisteredDate
+                    },
+                    RestaurantName = r.RestaurantName,
+                    SuggestedBy = new UserViewModel
+                    {
+                        Id = Guid.Parse(r.SuggestedBy.Id),
+                        UserName = r.SuggestedBy.UserName,
+                        NormalizedUserName = r.SuggestedBy.NormalizedUserName,
+                        Email = r.SuggestedBy.Email,
+                        NormalizedEmail = r.SuggestedBy.NormalizedEmail,
+                        EmailConfirmed = r.SuggestedBy.EmailConfirmed,
+                        PasswordHash = r.SuggestedBy.PasswordHash,
+                        SecurityStamp = r.SuggestedBy.SecurityStamp,
+                        ConcurrencyStamp = r.SuggestedBy.ConcurrencyStamp,
+                        PhoneNumber = r.SuggestedBy.PhoneNumber,
+                        PhoneNumberConfirmed = r.SuggestedBy.PhoneNumberConfirmed,
+                        TwoFactorEnabled = r.SuggestedBy.TwoFactorEnabled,
+                        LockoutEnd = r.SuggestedBy.LockoutEnd,
+                        LockoutEnabled = r.SuggestedBy.LockoutEnabled,
+                        AccessFailedCount = r.SuggestedBy.AccessFailedCount
+                    },
+                    RestaurantAddresse = r.RestaurantAddresse,
+                    RestaurantCity = r.RestaurantCity,
+                    RestaurantDescription = r.RestaurantDescription,
+                    RestaurantMark = r.RestaurantMark,
+                    RestaurantPhone = r.RestaurantPhone,
+                    RestaurantPostaleCode = r.RestaurantPostaleCode,
+                    CreatedDate = r.CreatedDate,
+                    UpdatedDate = r.UpdatedDate
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+
+            return ret;
+        }
+
+        public RestaurantViewModel SelectRestaurant(Guid companyId)
+        {
+            RestaurantViewModel ret = null;
+            bool isResultOk = false;
+            var rs = from r in dbContext.Restaurants
+                     join c in dbContext.Companies on r.Company.Id equals c.Id
+                     where c.Id == companyId
+                     select r;
+
+            do
+            {
+                int index = new Random().Next(0, rs.Count());
+                Restaurant restaurant = rs.ElementAt(index);
+                
+                if (restaurant != null)
+                {
+                    ret = this.Get(restaurant.Id);
+                }
+            
+                isResultOk = true;
+            } while (isResultOk != true);
+
+            UpdateProba(ret);
+
+            return ret;
+        }
+
+        //public RestaurantViewModel SelectR()
         //{
-        //    IList<RestaurantViewModel> ret = null;
+        //    RestaurantViewModel ret = new RestaurantViewModel();
 
         //    try
         //    {
-        //        IQueryable<Restaurant> resQuery = from r in dbContext.Restaurants
-        //                                          join u in dbContext.Users on r.SuggestedBy.Id equals u.Id
-        //                                          join c in dbContext.Companies on r.Company.Id equals c.Id
-        //                                          select r;
+        //        InitializeService();
+        //        var range = $"{Sheet}";
+        //        SpreadsheetsResource.ValuesResource.GetRequest request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
 
-        //        ret = resQuery.Select(r => new RestaurantViewModel
+        //        var response = request.Execute();
+        //        IList<IList<object>> values = response.Values;
+        //        if (values != null && values.Count > 0)
         //        {
-        //            Id = r.Id,
-        //            Company = new CompanyViewModel
+        //            int index = new Random().Next(0, values.Count - 1);
+        //            IList<object> tempRestau = values.ElementAt(index);
+        //            DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
+        //            string RestaurantName = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
+        //            string suggestedBy = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
+        //            string restaurantAddresse = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
+        //            string restaurantDescription = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
+
+        //            ret = new RestaurantViewModel
         //            {
-        //                Id = r.Company.Id,
-        //                CompanyName = r.Company.CompanyName,
-        //                RegisteredDate = r.Company.RegisteredDate
-        //            },
-        //            RestaurantName = r.RestaurantName,
-        //            SuggestedBy = new UserViewModel
-        //            {
-        //                Id = Guid.Parse(r.SuggestedBy.Id),
-        //                UserName = r.SuggestedBy.UserName,
-        //                NormalizedUserName = r.SuggestedBy.NormalizedUserName,
-        //                Email = r.SuggestedBy.Email,
-        //                NormalizedEmail = r.SuggestedBy.NormalizedEmail,
-        //                EmailConfirmed = r.SuggestedBy.EmailConfirmed,
-        //                PasswordHash = r.SuggestedBy.PasswordHash,
-        //                SecurityStamp = r.SuggestedBy.SecurityStamp,
-        //                ConcurrencyStamp = r.SuggestedBy.ConcurrencyStamp,
-        //                PhoneNumber = r.SuggestedBy.PhoneNumber,
-        //                PhoneNumberConfirmed = r.SuggestedBy.PhoneNumberConfirmed,
-        //                TwoFactorEnabled = r.SuggestedBy.TwoFactorEnabled,
-        //                LockoutEnd = r.SuggestedBy.LockoutEnd,
-        //                LockoutEnabled = r.SuggestedBy.LockoutEnabled,
-        //                AccessFailedCount = r.SuggestedBy.AccessFailedCount
-        //            },
-        //            RestaurantAddresse = r.RestaurantAddresse,
-        //            RestaurantCity = r.RestaurantCity,
-        //            RestaurantDescription = r.RestaurantDescription,
-        //            RestaurantMark = r.RestaurantMark,
-        //            RestaurantPhone = r.RestaurantPhone,
-        //            RestaurantPostaleCode = r.RestaurantPostaleCode,
-        //            CreatedDate = r.CreatedDate,
-        //            UpdatedDate = r.UpdatedDate
-        //        }).ToList();
+        //                CreatedDate = date,
+        //                CreatedDateString = date.ToShortDateString(),
+        //                RestaurantName = RestaurantName,
+        //                SuggestedBy = new UserViewModel
+        //                {
+        //                    UserName = suggestedBy
+        //                },
+        //                RestaurantAddresse = restaurantAddresse,
+        //                RestaurantDescription = restaurantDescription
+        //            };
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("No data found.");
+        //        }
         //    }
         //    catch (Exception ex)
         //    {
+        //        ret.IsError = true;
+        //        ret.ErrorMessage = ex.Message;
         //        Console.Error.WriteLine(ex.Message);
         //    }
 
         //    return ret;
         //}
 
-        public IList<RestaurantViewModel> GetAll()
-        {
-            IList<RestaurantViewModel> restaurants = new List<RestaurantViewModel>();
-
-            try
-            {
-                InitializeService();
-
-                var range = $"{Sheet}";
-                SpreadsheetsResource.ValuesResource.GetRequest request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
-
-                var response = request.Execute();
-                IList<IList<object>> values = response.Values;
-                if (values != null && values.Count > 0)
-                {
-                    foreach (var tempRestau in values.Skip(1))
-                    {
-                        DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
-                        string restaurantName = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
-                        string suggestedBy = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
-                        string restaurantAddresse = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
-                        string restaurantDescription = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
-
-                        RestaurantViewModel rvm = new RestaurantViewModel
-                        {
-                            CreatedDateString = date.ToShortDateString(),
-                            RestaurantName = restaurantName,
-                            SuggestedBy = new UserViewModel
-                            {
-                                UserName = suggestedBy
-                            },
-                            RestaurantAddresse = restaurantAddresse,
-                            RestaurantDescription = restaurantDescription
-                        };
-
-                        restaurants.Add(rvm);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No data found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex.Message);
-            }
-
-            return restaurants;
-        }
-
-        public RestaurantViewModel SelectR(Guid companyId)
-        {
-            RestaurantViewModel ret = null;
-            //bool isResultOk = false;
-            //int selectedId = 0;
-            //var rs = from r in dbContext.Restaurants
-            //                                join c in dbContext.Companies on r.Company.Id equals c.Id
-            //                                where c.Id == companyId
-            //                                select r;
-
-            //do
-            //{
-            //    selectedId = new Random().Next(0, rs.Count - 1);
-            //    ret = Get(selectedId);
-            //    isResultOk = true;
-            //} while (isResultOk != true);
-
-            //ret.NumberSelectedTimes++;
-            //UpdateProba(ret);
-
-            return ret;
-        }
-
-        public RestaurantViewModel SelectR()
-        {
-            RestaurantViewModel ret = new RestaurantViewModel();
-
-            try
-            {
-                InitializeService();
-                var range = $"{Sheet}";
-                SpreadsheetsResource.ValuesResource.GetRequest request = Service.Spreadsheets.Values.Get(SpreadsheetId, range);
-
-                var response = request.Execute();
-                IList<IList<object>> values = response.Values;
-                if (values != null && values.Count > 0)
-                {
-                    int index = new Random().Next(0, values.Count - 1);
-                    IList<object> tempRestau = values.ElementAt(index);
-                    DateTime date = string.IsNullOrEmpty(tempRestau[0].ToString()) ? DateTime.MinValue : DateTime.Parse(tempRestau[0].ToString());
-                    string RestaurantName = string.IsNullOrEmpty(tempRestau[1].ToString()) ? string.Empty : tempRestau[1].ToString();
-                    string suggestedBy = string.IsNullOrEmpty(tempRestau[2].ToString()) ? string.Empty : tempRestau[2].ToString();
-                    string restaurantAddresse = string.IsNullOrEmpty(tempRestau[3].ToString()) ? string.Empty : tempRestau[3].ToString();
-                    string restaurantDescription = string.IsNullOrEmpty(tempRestau[4].ToString()) ? string.Empty : tempRestau[4].ToString();
-
-                    ret = new RestaurantViewModel
-                    {
-                        CreatedDate = date,
-                        CreatedDateString = date.ToShortDateString(),
-                        RestaurantName = RestaurantName,
-                        SuggestedBy = new UserViewModel
-                        {
-                            UserName = suggestedBy
-                        },
-                        RestaurantAddresse = restaurantAddresse,
-                        RestaurantDescription = restaurantDescription
-                    };
-                }
-                else
-                {
-                    Console.WriteLine("No data found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                ret.IsError = true;
-                ret.ErrorMessage = ex.Message;
-                Console.Error.WriteLine(ex.Message);
-            }
-
-            return ret;
-        }
-
-        public RestaurantViewModel SelectR2()
+        public RestaurantViewModel SelectRestaurant()
         {
             RestaurantViewModel ret = new RestaurantViewModel();
 
@@ -401,23 +349,6 @@ namespace WhereToEat.Services.Implementation
             }
 
             return ret;
-        }
-
-        private void InitializeService()
-        {
-            GoogleCredential credential;
-
-            using (var stream = new FileStream(@".\on-mange-ou-331619-163024a51200.json", FileMode.Open, FileAccess.Read))
-            {
-                credential = GoogleCredential.FromStream(stream).CreateScoped(Scopes);
-            }
-
-            // Create Google Sheets API service.
-            Service = new SheetsService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
         }
     }
 }

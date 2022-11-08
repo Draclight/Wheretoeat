@@ -24,8 +24,4 @@
     <ProjectReference Include="..\WhereToEat.Core\WhereToEat.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>
