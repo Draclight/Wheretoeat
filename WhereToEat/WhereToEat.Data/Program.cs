@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WhereToEat.Data
 {
-    public class Program
+    public class program
     {
         static void Main(string[] args)
         {

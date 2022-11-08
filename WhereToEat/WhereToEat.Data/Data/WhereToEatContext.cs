@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WhereToEat.Core.Models;
 using System.Configuration;
+using WhereToEat.Data.Helper;
+using Microsoft.Extensions.Configuration;
 
 namespace WhereToEat.Data.Data
 {
@@ -13,7 +15,31 @@ namespace WhereToEat.Data.Data
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=WhereToEat_dev;Trusted_Connection=True;MultipleActiveResultSets=true");
+            string connectionString = string.Empty;
+            IConfigurationRoot config = null;
+
+            try
+            {
+                config = ConfigHelper.Load();
+                #if (DEBUG)
+                    connectionString = config.GetSection("connetionString").Value;
+                #elif (TEST)
+                    connectionString = config.GetSection("connetionStringRec").Value;
+                #elif (RELEASE)
+                    config = ConfigHelper.Load(Env.prod);
+                #endif
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            optionsBuilder.UseSqlServer(@connectionString);
+        }
+
+        private string getString(string environment)
+        {
+            return string.Empty;
         }
 
         public DbSet<Role> Roles { get; set; }
